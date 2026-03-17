@@ -9,14 +9,9 @@ export interface ProfanityOptions {
 export class ProfanityEngine {
 	private dictionary: Set<string>
 	private whitelist: Set<string>
-	private wordLengths: number[] = []
 	private maxWordLength = 0
+	private wordLengths: number[] = []
 
-	/**
-	 * Only characters that are commonly used as substitutions.
-	 * Important: do NOT apply these blindly to full sentences,
-	 * because punctuation like "!" at the end of a word is not leetspeak.
-	 */
 	private static readonly leetMap: Record<string, string> = {
 		'0': 'o',
 		'1': 'i',
@@ -28,24 +23,13 @@ export class ProfanityEngine {
 		'@': 'a',
 		$: 's',
 		'+': 't',
-		'!': 'i',
-		'*': '',
 	}
 
-	/**
-	 * Characters that may legitimately appear inside an obfuscated word segment.
-	 * Example:
-	 * - b!tch
-	 * - a$$
-	 * - f*ck
-	 */
-	private static readonly segmentRegex = /[a-z0-9@$+*!]+/gi
-
 	constructor(options?: ProfanityOptions) {
-		this.dictionary = new Set<string>()
+		this.dictionary = new Set()
 
 		for (const word of defaultDictionary) {
-			const canon = this.canonicaliseDictionaryWord(word)
+			const canon = this.canonicalizeWord(word)
 			if (canon) this.dictionary.add(canon)
 		}
 
@@ -59,27 +43,27 @@ export class ProfanityEngine {
 				'assassin',
 				'cassette',
 			]
-				.map((word) => this.canonicaliseDictionaryWord(word))
+				.map((word) => this.canonicalizeWord(word))
 				.filter(Boolean),
 		)
 
 		if (options?.addWords) {
 			for (const word of options.addWords) {
-				const canon = this.canonicaliseDictionaryWord(word)
+				const canon = this.canonicalizeWord(word)
 				if (canon) this.dictionary.add(canon)
 			}
 		}
 
 		if (options?.removeWords) {
 			for (const word of options.removeWords) {
-				const canon = this.canonicaliseDictionaryWord(word)
+				const canon = this.canonicalizeWord(word)
 				if (canon) this.dictionary.delete(canon)
 			}
 		}
 
 		if (options?.whitelist) {
 			for (const word of options.whitelist) {
-				const canon = this.canonicaliseDictionaryWord(word)
+				const canon = this.canonicalizeWord(word)
 				if (canon) this.whitelist.add(canon)
 			}
 		}
@@ -87,145 +71,87 @@ export class ProfanityEngine {
 		this.recomputeLengths()
 	}
 
-	/**
-	 * Lowercase + unicode compatibility normalization only.
-	 * Do NOT apply leet conversion here globally.
-	 */
-	private normaliseText(input: string): string {
-		return input.normalize('NFKC').toLowerCase()
-	}
-
-	/**
-	 * Canonicalize a dictionary word.
-	 * Dictionary entries are allowed to contain variants like:
-	 * - f*ck
-	 * - b!tch
-	 * - a$$
-	 */
-	private canonicaliseDictionaryWord(input: string): string {
-		const s = this.normaliseText(input)
-		let out = ''
-
-		for (const ch of s) {
-			if (/[a-z0-9]/.test(ch)) {
-				out += ch
-				continue
-			}
-
-			if (
-				Object.prototype.hasOwnProperty.call(
-					ProfanityEngine.leetMap,
-					ch,
-				)
-			) {
-				out += ProfanityEngine.leetMap[ch]
-			}
-		}
-
-		return out
-	}
-
-	/**
-	 * Canonicalize a candidate segment from user input.
-	 * This is where leet mappings are applied safely, only inside candidate segments.
-	 */
-	private canonicaliseCandidate(input: string): string {
-		const s = this.normaliseText(input)
-		let out = ''
-
-		for (const ch of s) {
-			if (/[a-z0-9]/.test(ch)) {
-				out += ch
-				continue
-			}
-
-			if (
-				Object.prototype.hasOwnProperty.call(
-					ProfanityEngine.leetMap,
-					ch,
-				)
-			) {
-				out += ProfanityEngine.leetMap[ch]
-			}
-		}
-
-		return out
-	}
-
-	/**
-	 * Returns additional variants for exaggerated letter repetition.
-	 * Example:
-	 * - fuuuuuck -> fuck
-	 * - biiitch -> bitch
-	 *
-	 * We keep the raw form too, so normal words like "class" are preserved.
-	 */
-	private buildCandidateForms(input: string): string[] {
-		const raw = this.canonicaliseCandidate(input)
-		if (!raw) return []
-
-		const variants = new Set<string>()
-		variants.add(raw)
-
-		// collapse 3+ repeated letters -> 1
-		variants.add(raw.replace(/([a-z])\1{2,}/g, '$1'))
-
-		// collapse 2+ repeated letters -> 1
-		variants.add(raw.replace(/([a-z])\1+/g, '$1'))
-
-		return Array.from(variants).filter(Boolean)
-	}
-
 	private recomputeLengths(): void {
 		const lengths = new Set<number>()
-		let max = 0
 
 		for (const word of this.dictionary) {
 			lengths.add(word.length)
-			if (word.length > max) max = word.length
+			if (word.length > this.maxWordLength) {
+				this.maxWordLength = word.length
+			}
 		}
 
 		this.wordLengths = Array.from(lengths).sort((a, b) => b - a)
-		this.maxWordLength = max
 	}
 
-	private isBannedCanonical(value: string): boolean {
+	private normalizeBase(input: string): string {
+		return input.normalize('NFKC').toLowerCase()
+	}
+
+	private convertLeetChar(ch: string): string {
+		return ProfanityEngine.leetMap[ch] ?? ch
+	}
+
+	private canonicalizeWord(input: string): string {
+		const s = this.normalizeBase(input)
+		let out = ''
+
+		for (const ch of s) {
+			if (/[a-z0-9]/.test(ch)) {
+				out += this.convertLeetChar(ch)
+				continue
+			}
+
+			if (ch === '*' || ch === '@' || ch === '$' || ch === '+') {
+				out += this.convertLeetChar(ch)
+			}
+		}
+
+		return out
+	}
+
+	private buildForms(input: string): string[] {
+		const base = this.normalizeBase(input)
+		let out = ''
+
+		for (const ch of base) {
+			if (/[a-z0-9]/.test(ch)) {
+				out += this.convertLeetChar(ch)
+				continue
+			}
+
+			// only allow symbol substitutions when they are internal obfuscation chars
+			if (ch === '*' || ch === '@' || ch === '$' || ch === '+') {
+				out += this.convertLeetChar(ch)
+			}
+		}
+
+		if (!out) return []
+
+		const forms = new Set<string>()
+		forms.add(out)
+		forms.add(out.replace(/([a-z])\1{2,}/g, '$1'))
+		forms.add(out.replace(/([a-z])\1+/g, '$1'))
+
+		return Array.from(forms).filter(Boolean)
+	}
+
+	private isBanned(word: string): boolean {
 		return (
-			value.length > 0 &&
-			this.dictionary.has(value) &&
-			!this.whitelist.has(value)
+			word.length > 0 &&
+			this.dictionary.has(word) &&
+			!this.whitelist.has(word)
 		)
 	}
 
-	private matchesAnyForm(input: string): boolean {
-		const forms = this.buildCandidateForms(input)
-
+	private matchesCandidate(input: string): boolean {
+		const forms = this.buildForms(input)
 		for (const form of forms) {
-			if (this.isBannedCanonical(form)) return true
+			if (this.isBanned(form)) return true
 		}
-
 		return false
 	}
 
-	/**
-	 * Trim boundary punctuation that is almost certainly not part of the word.
-	 * Important:
-	 * - removes trailing "!" in "fuck!"
-	 * - keeps internal symbols like b!tch or f*ck
-	 * - keeps "$" because a$$ is a valid obfuscation
-	 */
-	private trimBoundaryNoise(chunk: string): string {
-		return chunk
-			.replace(/^[^a-z0-9@$+*!]+/i, '')
-			.replace(/[^a-z0-9@$+*!]+$/i, '')
-	}
-
-	/**
-	 * Check suffixes of a run of single-letter tokens.
-	 * Catches:
-	 * - f u c k
-	 * - w t f
-	 */
 	private runHasBannedSuffix(run: string): boolean {
 		if (!run) return false
 
@@ -236,7 +162,7 @@ export class ProfanityEngine {
 		for (const len of this.wordLengths) {
 			if (len > run.length) continue
 			const candidate = run.slice(-len)
-			if (this.isBannedCanonical(candidate)) return true
+			if (this.isBanned(candidate)) return true
 		}
 
 		return false
@@ -245,101 +171,45 @@ export class ProfanityEngine {
 	public check(input: string): boolean {
 		if (!input || !input.trim()) return false
 
-		const normalised = this.normaliseText(input)
-		const whitespaceChunks = normalised.split(/\s+/).filter(Boolean)
+		const normalized = this.normalizeBase(input)
 
-		/**
-		 * Stage A:
-		 * Check each whitespace chunk directly after boundary trimming.
-		 * Catches:
-		 * - fuck!
-		 * - f*ck!
-		 * - b!tch
-		 * - a$$
-		 */
-		for (const rawChunk of whitespaceChunks) {
-			const chunk = this.trimBoundaryNoise(rawChunk)
-			if (!chunk) continue
-
-			if (this.matchesAnyForm(chunk)) {
-				return true
-			}
+		// Stage 1: normal words + leet digits
+		const wordTokens = normalized.match(/[a-z0-9]+/g) ?? []
+		for (const token of wordTokens) {
+			if (this.matchesCandidate(token)) return true
 		}
 
-		/**
-		 * Stage B:
-		 * Split each chunk into word-like segments and test sliding joins.
-		 * Catches:
-		 * - f.u.c.k
-		 * - the---f*ck??
-		 * - sh-i-t
-		 */
-		for (const rawChunk of whitespaceChunks) {
-			const chunk = this.trimBoundaryNoise(rawChunk)
-			if (!chunk) continue
+		// Stage 2: scan whitespace chunks for obfuscated profanity
+		// keep only characters that could plausibly belong to a disguised token
+		const chunks = normalized.split(/\s+/).filter(Boolean)
 
-			const segments = chunk.match(ProfanityEngine.segmentRegex) ?? []
-			if (segments.length === 0) continue
+		for (const chunk of chunks) {
+			const candidates = chunk.match(/[a-z0-9@\$+\*]+/g) ?? []
 
-			// individual segments
-			for (const segment of segments) {
-				if (this.matchesAnyForm(segment)) {
-					return true
-				}
+			// individual candidates
+			for (const candidate of candidates) {
+				if (this.matchesCandidate(candidate)) return true
 			}
 
-			// joined windows of consecutive segments
-			for (let i = 0; i < segments.length; i++) {
+			// joined sliding windows: f.u.c.k / sh-i-t / the---f*ck
+			for (let i = 0; i < candidates.length; i++) {
 				let joined = ''
-
-				for (let j = i; j < segments.length; j++) {
-					joined += segments[j]
-
-					const approxLength =
-						this.canonicaliseCandidate(joined).length
-					if (approxLength > this.maxWordLength) break
-
-					if (this.matchesAnyForm(joined)) {
-						return true
-					}
+				for (let j = i; j < candidates.length; j++) {
+					joined += candidates[j]
+					if (joined.length > this.maxWordLength + 4) break
+					if (this.matchesCandidate(joined)) return true
 				}
 			}
 		}
 
-		/**
-		 * Stage C:
-		 * Spaced-out single letters across whitespace.
-		 * Catches:
-		 * - f u c k
-		 * - w t f
-		 */
+		// Stage 3: spaced letters across words
 		let run = ''
-
-		for (const rawChunk of whitespaceChunks) {
-			const chunk = this.trimBoundaryNoise(rawChunk)
-			if (!chunk) {
+		for (const token of wordTokens) {
+			if (token.length === 1) {
+				run += token
+				if (this.runHasBannedSuffix(run)) return true
+			} else {
 				run = ''
-				continue
-			}
-
-			const segments = chunk.match(ProfanityEngine.segmentRegex) ?? []
-			if (segments.length !== 1) {
-				run = ''
-				continue
-			}
-
-			const forms = this.buildCandidateForms(segments[0])
-			const single = forms.find((value) => value.length === 1)
-
-			if (!single) {
-				run = ''
-				continue
-			}
-
-			run += single
-
-			if (this.runHasBannedSuffix(run)) {
-				return true
 			}
 		}
 
