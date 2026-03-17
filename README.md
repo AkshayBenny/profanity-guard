@@ -2,7 +2,7 @@
 
 A blazingly fast, zero-dependency, and highly extendable profanity filter for the modern web. Built with **TypeScript** for a seamless developer experience in **React**, **Next.js**, **Node.js**, and vanilla JavaScript.
 
-[![npm version](https://img.shields.io/npm/v/clean-text-filter.svg)](https://www.npmjs.com/package/clean-text-filter)
+[![npm version](https://img.shields.io/npm/v/profanity-guard.svg)](https://www.npmjs.com/package/profanity-guard)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Features
@@ -19,9 +19,9 @@ A blazingly fast, zero-dependency, and highly extendable profanity filter for th
 ## Installation
 
 ```bash
-npm install clean-text-filter
+npm install profanity-guard
 # or
-yarn add clean-text-filter
+yarn add profanity-guard
 ```
 
 ## Usage
@@ -31,7 +31,7 @@ yarn add clean-text-filter
 Import the ready-to-use function for standard filtering using the built-in dictionary of 300+ words.
 
 ```ts
-import { profanityCheck } from 'clean-text-filter'
+import { profanityCheck } from 'profanity-guard'
 
 // Simple boolean checks
 const isOffensive = profanityCheck('This is some bullsh!t')
@@ -46,7 +46,7 @@ console.log(isClean) // false
 Use the `ProfanityEngine` class to tailor the filter to your application's specific needs. This is useful for adding domain-specific slang or whitelisting words.
 
 ```ts
-import { ProfanityEngine } from 'clean-text-filter'
+import { ProfanityEngine } from 'profanity-guard'
 
 const myGuard = new ProfanityEngine({
 	addWords: ['custom-bad-word', 'competitor-name'], // Add unique banned words
@@ -64,7 +64,7 @@ Prevent inappropriate usernames or comments directly in the UI.
 
 ```tsx
 import React, { useState } from 'react'
-import { profanityCheck } from 'clean-text-filter'
+import { profanityCheck } from 'profanity-guard'
 
 export function Registration() {
 	const [error, setError] = useState('')
@@ -100,7 +100,7 @@ Sanitize user-generated content on the server side before database entry.
 ```ts
 // app/api/comment/route.ts
 import { NextResponse } from 'next/server'
-import { profanityCheck } from 'clean-text-filter'
+import { profanityCheck } from 'profanity-guard'
 
 export async function POST(request: Request) {
 	const { content } = await request.json()
