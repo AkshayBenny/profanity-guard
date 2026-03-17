@@ -1,0 +1,30 @@
+{
+	"name": "profanity-guard",
+	"version": "1.0.0",
+	"description": "A fast, zero-dependency, highly extendable profanity filter for Node.js, React, Next.js, and Vanilla JS.",
+	"main": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"scripts": {
+		"build": "tsc",
+		"prepublishOnly": "npm run build"
+	},
+	"files": [
+		"dist"
+	],
+	"keywords": [
+		"profanity",
+		"filter",
+		"bad words",
+		"censor",
+		"react",
+		"nextjs",
+		"typescript",
+		"moderation"
+	],
+	"author": "Akshay Benny",
+	"license": "MIT",
+	"devDependencies": {
+		"@types/node": "^25.5.0",
+		"typescript": "^5.9.3"
+	}
+}
