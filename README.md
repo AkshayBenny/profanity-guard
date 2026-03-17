@@ -1,4 +1,4 @@
-# Clean Text Filter
+# Profanity Guard
 
 A blazingly fast, zero-dependency, and highly extendable profanity filter for the modern web. Built with **TypeScript** for a seamless developer experience in **React**, **Next.js**, **Node.js**, and vanilla JavaScript.
 
