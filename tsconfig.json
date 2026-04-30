@@ -4,6 +4,7 @@
 		"module": "CommonJS",
 		"lib": ["ES2018", "DOM"],
 		"declaration": true,
+		"rootDir": "./src",
 		"outDir": "./dist",
 		"strict": true,
 		"esModuleInterop": true,

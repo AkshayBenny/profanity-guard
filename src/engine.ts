@@ -1,8 +1,8 @@
 import { dictionaries, SupportedLanguage } from './locales'
 
 export interface ProfanityOptions {
-	language?: SupportedLanguage // e.g., 'en', 'fr'
-	dictionary?: string[] // Allows injecting a completely custom array
+	language?: SupportedLanguage
+	dictionary?: string[]
 	addWords?: string[]
 	removeWords?: string[]
 	whitelist?: string[]
@@ -14,6 +14,7 @@ export class ProfanityEngine {
 	private maxWordLength = 0
 	private wordLengths: number[] = []
 
+	// FIX: Added '!' to the leet map
 	private static readonly leetMap: Record<string, string> = {
 		'0': 'o',
 		'1': 'i',
@@ -25,12 +26,12 @@ export class ProfanityEngine {
 		'@': 'a',
 		$: 's',
 		'+': 't',
+		'!': 'i',
 	}
 
 	constructor(options?: ProfanityOptions) {
 		this.dictionary = new Set()
 
-		// 1. Determine which base dictionary to load
 		let baseWords: string[] = []
 		if (options?.dictionary) {
 			baseWords = options.dictionary
@@ -39,13 +40,11 @@ export class ProfanityEngine {
 			baseWords = dictionaries[lang] || dictionaries['en']
 		}
 
-		// 2. Load dictionary
 		for (const word of baseWords) {
 			const canon = this.canonicalizeWord(word)
 			if (canon) this.dictionary.add(canon)
 		}
 
-		// 3. Setup standard whitelist
 		this.whitelist = new Set(
 			[
 				'classic',
@@ -60,7 +59,6 @@ export class ProfanityEngine {
 				.filter(Boolean),
 		)
 
-		// 4. Apply custom options
 		if (options?.addWords) {
 			for (const word of options.addWords) {
 				const canon = this.canonicalizeWord(word)
@@ -99,7 +97,6 @@ export class ProfanityEngine {
 	}
 
 	private normalizeBase(input: string): string {
-		// CRITICAL FOR I18N: Strips accents and diacritics (e.g., é -> e, ñ -> n)
 		return input
 			.normalize('NFD')
 			.replace(/[\u0300-\u036f]/g, '')
@@ -115,12 +112,13 @@ export class ProfanityEngine {
 		let out = ''
 
 		for (const ch of s) {
-			if (/[a-z0-9]/.test(ch)) {
+			// FIX: Use Unicode regex \p{L} and \p{N} for multi-language support
+			if (/[\p{L}\p{N}]/u.test(ch)) {
 				out += this.convertLeetChar(ch)
 				continue
 			}
 
-			if (ch === '*' || ch === '@' || ch === '$' || ch === '+') {
+			if (['*', '@', '$', '+', '!'].includes(ch)) {
 				out += this.convertLeetChar(ch)
 			}
 		}
@@ -133,11 +131,12 @@ export class ProfanityEngine {
 		let out = ''
 
 		for (const ch of base) {
-			if (/[a-z0-9]/.test(ch)) {
+			// FIX: Unicode regex
+			if (/[\p{L}\p{N}]/u.test(ch)) {
 				out += this.convertLeetChar(ch)
 				continue
 			}
-			if (ch === '*' || ch === '@' || ch === '$' || ch === '+') {
+			if (['*', '@', '$', '+', '!'].includes(ch)) {
 				out += this.convertLeetChar(ch)
 			}
 		}
@@ -146,8 +145,9 @@ export class ProfanityEngine {
 
 		const forms = new Set<string>()
 		forms.add(out)
-		forms.add(out.replace(/([a-z])\1{2,}/g, '$1'))
-		forms.add(out.replace(/([a-z])\1+/g, '$1'))
+		// FIX: Unicode regex for repeated character reduction
+		forms.add(out.replace(/([\p{L}])\1{2,}/gu, '$1'))
+		forms.add(out.replace(/([\p{L}])\1+/gu, '$1'))
 
 		return Array.from(forms).filter(Boolean)
 	}
@@ -163,7 +163,26 @@ export class ProfanityEngine {
 	private matchesCandidate(input: string): boolean {
 		const forms = this.buildForms(input)
 		for (const form of forms) {
+			// 1. Fast O(1) Exact Match
 			if (this.isBanned(form)) return true
+
+			// 2. FIX: Dynamic Wildcard Match for '*'
+			// If the user types "f*ck", we check the dictionary for matching 4-letter words
+			if (form.includes('*')) {
+				const regexPattern = new RegExp(
+					'^' + form.replace(/\*/g, '[\\p{L}\\p{N}]') + '$',
+					'iu',
+				)
+				for (const word of this.dictionary) {
+					if (
+						word.length === form.length &&
+						regexPattern.test(word) &&
+						!this.whitelist.has(word)
+					) {
+						return true
+					}
+				}
+			}
 		}
 		return false
 	}
@@ -188,7 +207,8 @@ export class ProfanityEngine {
 
 		const normalized = this.normalizeBase(input)
 
-		const wordTokens = normalized.match(/[a-z0-9]+/g) ?? []
+		// FIX: Unicode tokenization
+		const wordTokens = normalized.match(/[\p{L}\p{N}]+/gu) ?? []
 		for (const token of wordTokens) {
 			if (this.matchesCandidate(token)) return true
 		}
@@ -196,7 +216,8 @@ export class ProfanityEngine {
 		const chunks = normalized.split(/\s+/).filter(Boolean)
 
 		for (const chunk of chunks) {
-			const candidates = chunk.match(/[a-z0-9@\$+\*]+/g) ?? []
+			// FIX: Unicode tokenization + new leet chars
+			const candidates = chunk.match(/[\p{L}\p{N}@\$+\*!]+/gu) ?? []
 
 			for (const candidate of candidates) {
 				if (this.matchesCandidate(candidate)) return true
