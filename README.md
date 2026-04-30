@@ -4,7 +4,7 @@ A fast, multi-language, and zero-dependency profanity filter. Protect your appli
 
 [![npm version](https://img.shields.io/npm/v/profanity-guard.svg)](https://www.npmjs.com/package/profanity-guard)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Bundle Size](https://img.shields.io/bundlephobia/minzip/profanity-guard)](https://bundlephobia.com/package/profanity-guard)
+[![Package Size](https://packagephobia.com/badge?p=profanity-guard)](https://packagephobia.com/result?p=profanity-guard)
 [![Tests](https://github.com/AkshayBenny/profanity-guard/actions/workflows/test.yml/badge.svg)](https://github.com/AkshayBenny/profanity-guard/actions)
 [![Dependencies](https://img.shields.io/badge/dependencies-0-success.svg)](https://www.npmjs.com/package/profanity-guard)
 [![Types included](https://img.shields.io/npm/types/profanity-guard.svg)](https://www.npmjs.com/package/profanity-guard)
