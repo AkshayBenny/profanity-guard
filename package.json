@@ -1,6 +1,6 @@
 {
 	"name": "profanity-guard",
-	"version": "1.0.7",
+	"version": "1.1.0",
 	"description": "A fast, zero-dependency, highly extendable profanity filter for Node.js, React, Next.js, and Vanilla JS.",
 	"main": "./dist/index.js",
 	"types": "./dist/index.d.ts",
