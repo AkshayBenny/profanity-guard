@@ -4,6 +4,14 @@ A fast, multi-language, and zero-dependency profanity filter. Protect your appli
 
 [![npm version](https://img.shields.io/npm/v/profanity-guard.svg)](https://www.npmjs.com/package/profanity-guard)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Bundle Size](https://img.shields.io/bundlephobia/minzip/profanity-guard)](https://bundlephobia.com/package/profanity-guard)
+[![Tests](https://github.com/AkshayBenny/profanity-guard/actions/workflows/test.yml/badge.svg)](https://github.com/AkshayBenny/profanity-guard/actions)
+[![Dependencies](https://img.shields.io/badge/dependencies-0-success.svg)](https://www.npmjs.com/package/profanity-guard)
+[![Types included](https://img.shields.io/npm/types/profanity-guard.svg)](https://www.npmjs.com/package/profanity-guard)
+[![npm downloads](https://img.shields.io/npm/dm/profanity-guard.svg)](https://www.npmjs.com/package/profanity-guard)
+[![npm total downloads](https://img.shields.io/npm/dt/profanity-guard.svg)](https://www.npmjs.com/package/profanity-guard)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://makeapullrequest.com)
+[![GitHub issues](https://img.shields.io/github/issues/AkshayBenny/profanity-guard.svg)](https://github.com/AkshayBenny/profanity-guard/issues)
 
 ## Features
 
@@ -74,26 +82,31 @@ export const checkText = (input: string) => myGuard.check(input)
 ```
 
 ### Real-World Use Case: Dynamic Chat Moderation
+
 If your application supports multiple regions, you can dynamically instantiate the engine based on the user's region or channel settings to ensure accurate filtering.
+
 ```ts
 import { ProfanityEngine, SupportedLanguage } from 'profanity-guard'
 
 // Create a cache of engines for different regions
 const regionGuards: Record<string, ProfanityEngine> = {
-    'eu-west': new ProfanityEngine({ language: 'fr', addWords: ['merde-locale'] }),
-    'ap-south': new ProfanityEngine({ language: 'hi' }),
-    'us-east': new ProfanityEngine({ language: 'en', whitelist: ['classic'] })
+	'eu-west': new ProfanityEngine({
+		language: 'fr',
+		addWords: ['merde-locale'],
+	}),
+	'ap-south': new ProfanityEngine({ language: 'hi' }),
+	'us-east': new ProfanityEngine({ language: 'en', whitelist: ['classic'] }),
 }
 
 export function moderateMessage(region: string, message: string): boolean {
-    const guard = regionGuards[region] || regionGuards['us-east'] // Fallback to English
-    
-    if (guard.check(message)) {
-        console.warn(`[Moderation] Flagged message in region: ${region}`)
-        return false // Block message
-    }
-    
-    return true // Allow message
+	const guard = regionGuards[region] || regionGuards['us-east'] // Fallback to English
+
+	if (guard.check(message)) {
+		console.warn(`[Moderation] Flagged message in region: ${region}`)
+		return false // Block message
+	}
+
+	return true // Allow message
 }
 ```
 
@@ -160,7 +173,6 @@ export async function POST(request: Request) {
 ```
 
 ## Configuration Options
-
 
 | Option        | Type                                   | Description                                                                 |
 | ------------- | -------------------------------------- | --------------------------------------------------------------------------- |
