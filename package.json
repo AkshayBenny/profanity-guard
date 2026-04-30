@@ -34,6 +34,14 @@
 		"typescript"
 	],
 	"author": "Akshay Benny",
+	"homepage": "https://github.com/AkshayBenny/profanity-guard#readme",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/AkshayBenny/profanity-guard.git"
+	},
+	"bugs": {
+		"url": "https://github.com/AkshayBenny/profanity-guard/issues"
+	},
 	"license": "MIT",
 	"devDependencies": {
 		"@types/node": "^25.6.0",
