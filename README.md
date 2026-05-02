@@ -15,7 +15,7 @@ A fast, multi-language, and zero-dependency profanity filter. Protect your appli
 
 ## Features
 
-- **Multilingual:** Out-of-the-box detection for 5,000+ offensive terms in English (`en`), French (`fr`), Hindi/Hinglish (`hi`), Russian (`ru`), and Mandarin (`zh`).
+- **Multilingual:** Out-of-the-box detection for 5,000+ offensive terms in English (`en`), French (`fr`), Hindi/Hinglish (`hi`), Russian (`ru`), Mandarin (`zh`) and Arabic (`ar`).
 - **Performance-First:** Uses O(1) Set lookups and optimized tokenization.
 - **Leet-Speak Detection:** Automatically catches bypasses like `b!tch`, `a$$hole`, or `f*ck`.
 - **Scunthorpe Proof:** Smart logic prevents false positives for words like "button" or "classic".
