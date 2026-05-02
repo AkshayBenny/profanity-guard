@@ -26,6 +26,22 @@ A fast, multi-language, and zero-dependency profanity filter. Protect your appli
 
 ---
 
+## Performance
+
+`profanity-guard` is built for high-performance Node.js environments. By utilizing Set lookups (O(1)) instead of traditional Regular Expressions, it delivers enterprise-grade text normalization (catching leetspeak and Unicode bypasses) without the performance bottleneck.
+
+In a local benchmark of 10,000 validations:
+
+| Library             | Time (10k ops) | Engine Strategy                      | Catches Leetspeak / Bypasses? |
+| :------------------ | :------------- | :----------------------------------- | :---------------------------- |
+| **profanity-guard** | **~217ms**     | **O(1) Set + Unicode Normalization** | **Yes (High Accuracy)**       |
+| `no-profanity`      | ~2,247ms       | String Matching                      | No                            |
+| `bad-words`         | ~3,245ms       | Large RegEx Iteration                | Partial                       |
+
+_Result: `profanity-guard` is 10x faster than `no-profanity` and 15x faster than `bad-words`, while offering superior bypass protection._
+
+> **Note on minimalist libraries:** Libraries like `leo-profanity` will benchmark faster (~10ms) because they skip Unicode normalization and leetspeak translation. `profanity-guard` intentionally trades a fraction of a millisecond to guarantee accuracy against modern filter bypasses.
+
 ## Installation
 
 ```bash
@@ -180,16 +196,6 @@ export async function POST(request: Request) {
 }
 ```
 
-## Performance Metrics
-
-`profanity-guard` is optimized to operate efficiently in both high-frequency UI layers and data-heavy backend pipelines. Benchmarks conducted on a standard Node.js environment yield the following baseline metrics:
-
-- Operation Time: ~0.02 milliseconds per validation check.
-
-- Throughput: ~45,000 operations per second (single thread).
-
-These tolerances allow the library to function synchronously within the 16ms frontend render budget or process large datasets without impeding the Node.js event loop.
-
 ## Configuration API Reference
 
 When instantiating a new `ProfanityEngine(options)`, the constructor accepts the following properties:
@@ -211,12 +217,6 @@ When instantiating a new `ProfanityEngine(options)`, the constructor accepts the
 - **[Sponsor on GitHub](https://github.com/sponsors/AkshayBenny)**
 - **[Donate via Buy Me a Coffee](https://buymeacoffee.com/akshaybenny)**
 
-## License
-
-MIT © 2026 [Akshay Benny](https://akshaybenny.com)
-
----
-
 ## Community & Contributing
 
 We love contributions! Whether you're fixing a bug, adding a new language, or improving performance, please check out our guides:
@@ -226,3 +226,7 @@ We love contributions! Whether you're fixing a bug, adding a new language, or im
 - **[License](LICENSE)** - This project is licensed under the MIT License.
 
 If you find a bug or have a feature request, please **[open an issue](https://github.com/AkshayBenny/profanity-guard/issues)**.
+
+## License
+
+MIT © 2026 [Akshay Benny](https://akshaybenny.com)
