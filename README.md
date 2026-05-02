@@ -202,6 +202,15 @@ When instantiating a new `ProfanityEngine(options)`, the constructor accepts the
 | `removeWords` | `string[]`                                                             | Array of words to remove (whitelist) from the blacklist.                    |
 | `whitelist`   | `string[]`                                                             | Array of words that will always be allowed, overriding any blocked matches. |
 
+## ❤️ Support the Project
+
+`profanity-guard` is open-source and free to use. If this library is saving you time or helping you moderate your community, consider supporting its development. Your support helps me maintain the dictionaries and keep the engine blazingly fast.
+
+[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-ffdd00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/akshaybenny)
+
+- **[Sponsor on GitHub](https://github.com/sponsors/AkshayBenny)**
+- **[Donate via Buy Me a Coffee](https://buymeacoffee.com/akshaybenny)**
+
 ## License
 
 MIT © 2026 [Akshay Benny](https://akshaybenny.com)

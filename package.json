@@ -1,6 +1,16 @@
 {
 	"name": "profanity-guard",
 	"version": "1.1.13",
+	"funding": [
+		{
+			"type": "buy_me_a_coffee",
+			"url": "https://buymeacoffee.com/akshaybenny"
+		},
+		{
+			"type": "github",
+			"url": "https://github.com/sponsors/AkshayBenny"
+		}
+	],
 	"description": "A fast, multi-language, and zero-dependency profanity filter. Protect your applications with a massive dictionary of 5,000+ words across English, Arabic, German, Spanish, French, Hindi, Korean, Russian, Mandarin.",
 	"main": "./dist/index.js",
 	"types": "./dist/index.d.ts",
