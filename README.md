@@ -205,3 +205,15 @@ When instantiating a new `ProfanityEngine(options)`, the constructor accepts the
 ## License
 
 MIT © 2026 [Akshay Benny](https://akshaybenny.com)
+
+---
+
+## Community & Contributing
+
+We love contributions! Whether you're fixing a bug, adding a new language, or improving performance, please check out our guides:
+
+- **[Contributing Guide](CONTRIBUTING.md)** - How to get started and submit a PR.
+- **[Code of Conduct](CODE_OF_CONDUCT.md)** - Our pledge to a respectful community.
+- **[License](LICENSE)** - This project is licensed under the MIT License.
+
+If you find a bug or have a feature request, please **[open an issue](https://github.com/AkshayBenny/profanity-guard/issues)**.
