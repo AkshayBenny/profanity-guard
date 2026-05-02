@@ -1,6 +1,6 @@
 {
 	"name": "profanity-guard",
-	"version": "1.1.8",
+	"version": "1.1.9",
 	"description": "A blazingly fast, multi-language profanity filter (English, French, Hindi, Russian, Mandarin) for React, Next.js, and Node.js.",
 	"main": "./dist/index.js",
 	"types": "./dist/index.d.ts",
