@@ -25,4 +25,20 @@ export const profanityCheck = (
 	return getProfanityEngine(lang).check(input)
 }
 
+/**
+ * Censors profanity in a string based on the specified language.
+ * @param input The text to censor
+ * @param lang The language code (defaults to 'en')
+ * @param replaceChar The character to replace bad words with (defaults to '*')
+ */
+export const profanityCensor = (
+    input: string,
+    lang: SupportedLanguage = 'en',
+    replaceChar = '*'
+): string => {
+    return getProfanityEngine(lang).censor(input, replaceChar)
+}
+
 export { ProfanityEngine }
+
+
