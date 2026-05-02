@@ -1,3 +1,4 @@
+import { ar } from './ar'
 import { en } from './en'
 import { fr } from './fr'
 import { hi } from './hi'
@@ -10,6 +11,7 @@ export const dictionaries = {
 	hi,
 	ru,
 	zh,
+	ar,
 } as const
 
 export type SupportedLanguage = keyof typeof dictionaries
