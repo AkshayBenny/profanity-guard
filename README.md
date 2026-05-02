@@ -50,6 +50,10 @@ console.log(isClean) // false
 
 // English ('en' is the default)
 console.log(profanityCheck("Don't be a d!ck")) // true
+```
+
+```ts
+import { profanityCheck } from 'profanity-guard'
 
 // French ('fr')
 console.log(profanityCheck("C'est de la m*rde", 'fr')) // true
@@ -62,6 +66,9 @@ console.log(profanityCheck('Stop being a b**nd', 'hi')) // true
 
 // Mandarin ('zh')
 console.log(profanityCheck('你这个**', 'zh')) // true
+
+// Arabic ('ar')
+console.log(profanityCheck('ابنة متناكة', 'ar')) // true
 ```
 
 ### 2. Custom Extension
