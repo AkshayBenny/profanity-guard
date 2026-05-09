@@ -1,7 +1,7 @@
-import { dictionaries, SupportedLanguage } from './locales'
+import { dictionaries, LanguageOption } from './locales'
 
 export interface ProfanityOptions {
-	language?: SupportedLanguage
+	language?: LanguageOption
 	dictionary?: string[]
 	addWords?: string[]
 	removeWords?: string[]
@@ -13,9 +13,8 @@ export class ProfanityEngine {
 	private whitelist: Set<string>
 	private maxWordLength = 0
 	private wordLengths: number[] = []
-	private cjkDictionary: string[] = [] // Added for CJK substring matching
+	private cjkDictionary: string[] = []
 
-	// Added '!' to the leet map
 	private static readonly leetMap: Record<string, string> = {
 		'0': 'o',
 		'1': 'i',
@@ -38,7 +37,18 @@ export class ProfanityEngine {
 			baseWords = options.dictionary
 		} else {
 			const lang = options?.language || 'en'
-			baseWords = dictionaries[lang] || dictionaries['en']
+
+			if (lang === 'all') {
+				// Compatible alternative to .flat()
+				baseWords = Object.values(dictionaries).reduce(
+					(acc, val) => acc.concat(val),
+					[],
+				)
+			} else {
+				baseWords =
+					dictionaries[lang as keyof typeof dictionaries] ||
+					dictionaries['en']
+			}
 		}
 
 		for (const word of baseWords) {
@@ -96,7 +106,6 @@ export class ProfanityEngine {
 
 		this.wordLengths = Array.from(lengths).sort((a, b) => b - a)
 
-		// Isolate CJK words for substring matching (Hanzi, Hangul, Hiragana, Katakana)
 		this.cjkDictionary = Array.from(this.dictionary).filter((word) =>
 			/[\p{Script=Han}\p{Script=Hangul}\p{Script=Hiragana}\p{Script=Katakana}]/u.test(
 				word,
@@ -120,7 +129,6 @@ export class ProfanityEngine {
 		let out = ''
 
 		for (const ch of s) {
-			// Use Unicode regex \p{L} and \p{N} for multi-language support
 			if (/[\p{L}\p{N}]/u.test(ch)) {
 				out += this.convertLeetChar(ch)
 				continue
@@ -139,7 +147,6 @@ export class ProfanityEngine {
 		let out = ''
 
 		for (const ch of base) {
-			// Unicode regex
 			if (/[\p{L}\p{N}]/u.test(ch)) {
 				out += this.convertLeetChar(ch)
 				continue
@@ -153,7 +160,6 @@ export class ProfanityEngine {
 
 		const forms = new Set<string>()
 		forms.add(out)
-		// Unicode regex for repeated character reduction
 		forms.add(out.replace(/([\p{L}])\1{2,}/gu, '$1'))
 		forms.add(out.replace(/([\p{L}])\1+/gu, '$1'))
 
@@ -171,11 +177,8 @@ export class ProfanityEngine {
 	private matchesCandidate(input: string): boolean {
 		const forms = this.buildForms(input)
 		for (const form of forms) {
-			// 1. Fast O(1) Exact Match
 			if (this.isBanned(form)) return true
 
-			// 2. Dynamic Wildcard Match for '*'
-			// If the user types "f*ck", we check the dictionary for matching 4-letter words
 			if (form.includes('*')) {
 				const regexPattern = new RegExp(
 					'^' + form.replace(/\*/g, '[\\p{L}\\p{N}]') + '$',
@@ -215,12 +218,10 @@ export class ProfanityEngine {
 
 		const normalized = this.normalizeBase(input)
 
-		// Fast CJK Substring Match: Handles attached particles natively
 		for (const cjkWord of this.cjkDictionary) {
 			if (normalized.includes(cjkWord)) return true
 		}
 
-		// Unicode tokenization
 		const wordTokens = normalized.match(/[\p{L}\p{N}]+/gu) ?? []
 		for (const token of wordTokens) {
 			if (this.matchesCandidate(token)) return true
@@ -229,7 +230,6 @@ export class ProfanityEngine {
 		const chunks = normalized.split(/\s+/).filter(Boolean)
 
 		for (const chunk of chunks) {
-			// Unicode tokenization + leet chars
 			const candidates = chunk.match(/[\p{L}\p{N}@\$+\*!]+/gu) ?? []
 
 			for (const candidate of candidates) {
@@ -259,33 +259,23 @@ export class ProfanityEngine {
 		return false
 	}
 
-	/**
-	 * Replaces profanity in the input string with a specified character.
-	 * Preserves whitespace and punctuation.
-	 */
 	public censor(input: string, replaceChar = '*'): string {
 		if (!input || !input.trim()) return input
 
-		// Split by non-word characters, preserving them in the array
 		const tokens = input.split(/([^\p{L}\p{N}@\$+\*!]+)/u)
 
 		return tokens
 			.map((token) => {
-				// If the token contains letters/numbers/leet chars
 				if (/[\p{L}\p{N}@\$+\*!]+/u.test(token)) {
-					// Identify trailing punctuation (! or *) that isn't acting as leetspeak mid-word
 					const trailingMatch = token.match(/([!*]+)$/)
 					const trailing = trailingMatch ? trailingMatch[1] : ''
 					const coreToken = trailing
 						? token.slice(0, -trailing.length)
 						: token
 
-					// Check the core word first
 					if (coreToken && this.check(coreToken)) {
 						return replaceChar.repeat(coreToken.length) + trailing
-					}
-					// Fallback: check the whole token in case the trailing char WAS leetspeak
-					else if (this.check(token)) {
+					} else if (this.check(token)) {
 						return replaceChar.repeat(token.length)
 					}
 				}

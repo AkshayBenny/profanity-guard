@@ -7,9 +7,11 @@ import { hi } from './hi'
 import { ko } from './ko'
 import { ru } from './ru'
 import { zh } from './zh'
+import { br } from './br'
 
 export const dictionaries = {
 	ar,
+	br,
 	de,
 	en,
 	es,
@@ -18,7 +20,7 @@ export const dictionaries = {
 	ko,
 	ru,
 	zh,
-
 } as const
 
 export type SupportedLanguage = keyof typeof dictionaries
+export type LanguageOption = SupportedLanguage | 'all'

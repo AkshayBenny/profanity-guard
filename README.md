@@ -15,7 +15,7 @@ A fast, multi-language, and zero-dependency profanity filter. Protect your appli
 
 ## Features
 
-- **Multilingual:** Out-of-the-box detection for 5,000+ offensive terms in English (`en`), Arabic (`ar`), German (`de`), Spanish (`es`), French (`fr`), Hindi (`hi`), Korean (`ko`), Russian (`ru`), Mandarin (`zh`).
+- **Multilingual:** Out-of-the-box detection for 5,000+ offensive terms in English (`en`), Arabic (`ar`), German (`de`), Spanish (`es`), French (`fr`), Hindi (`hi`), Korean (`ko`), Russian (`ru`), Mandarin (`zh`), Brazilian Portuguese (`br`).
 - **Performance-First:** Uses O(1) Set lookups and optimized tokenization.
 - **Smart Censoring:** Automatically mask bad words while keeping surrounding punctuation and spacing perfectly intact.
 - **Leet-Speak Detection:** Automatically catches bypasses like `b!tch`, `a$$hole`, or `f*ck`.
@@ -67,6 +67,7 @@ const isClean = profanityCheck('Have a wonderful day!')
 console.log(isClean) // false
 
 // Language-Specific Evaluation
+console.log(profanityCheck('vai pro c*ralho', 'br')) // true
 console.log(profanityCheck("C'est de la m*rde", 'fr')) // true
 console.log(profanityCheck('прекрати это, бл**ь', 'ru')) // true
 console.log(profanityCheck('Stop being a b**nd', 'hi')) // true
@@ -118,6 +119,7 @@ const regionGuards: Record<string, ProfanityEngine> = {
 	}),
 	'ap-south': new ProfanityEngine({ language: 'hi' }),
 	'us-east': new ProfanityEngine({ language: 'en', whitelist: ['classic'] }),
+	global: new ProfanityEngine({ language: 'all' }), // Checks all languages
 }
 
 export function moderateMessage(region: string, message: string): boolean {
@@ -200,13 +202,13 @@ export async function POST(request: Request) {
 
 When instantiating a new `ProfanityEngine(options)`, the constructor accepts the following properties:
 
-| Option        | Type                                                                   | Description                                                                 |
-| ------------- | ---------------------------------------------------------------------- | --------------------------------------------------------------------------- |
-| `language`    | `'en' \| 'fr' \| 'hi' \| 'ru' \| 'zh' \| 'ar' \| 'de' \| 'es' \| 'ko'` | The base dictionary to load. Defaults to `'en'`.                            |
-| `dictionary`  | `string[]`                                                             | Completely override the built-in dictionary with your own custom array.     |
-| `addWords`    | `string[]`                                                             | Array of words to add to the blacklist.                                     |
-| `removeWords` | `string[]`                                                             | Array of words to remove (whitelist) from the blacklist.                    |
-| `whitelist`   | `string[]`                                                             | Array of words that will always be allowed, overriding any blocked matches. |
+| Option        | Type                                                                                    | Description                                                                                             |
+| ------------- | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| `language`    | `'en' \| 'fr' \| 'hi' \| 'ru' \| 'zh' \| 'ar' \| 'de' \| 'es' \| 'ko' \| 'br' \| 'all'` | The base dictionary to load. Defaults to `'en'`. Passing `'all'` loads every dictionary simultaneously. |
+| `dictionary`  | `string[]`                                                                              | Completely override the built-in dictionary with your own custom array.                                 |
+| `addWords`    | `string[]`                                                                              | Array of words to add to the blacklist.                                                                 |
+| `removeWords` | `string[]`                                                                              | Array of words to remove (whitelist) from the blacklist.                                                |
+| `whitelist`   | `string[]`                                                                              | Array of words that will always be allowed, overriding any blocked matches.                             |
 
 ## ❤️ Support the Project
 

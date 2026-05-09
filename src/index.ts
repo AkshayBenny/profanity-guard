@@ -1,11 +1,10 @@
 import { ProfanityEngine } from './engine'
-import { SupportedLanguage } from './locales'
+import { LanguageOption } from './locales'
 
-// Cache engines by language to prevent rebuilding Sets on every check
-const engines = new Map<SupportedLanguage, ProfanityEngine>()
+const engines = new Map<LanguageOption, ProfanityEngine>()
 
 export const getProfanityEngine = (
-	lang: SupportedLanguage = 'en',
+	lang: LanguageOption = 'en',
 ): ProfanityEngine => {
 	if (!engines.has(lang)) {
 		engines.set(lang, new ProfanityEngine({ language: lang }))
@@ -16,11 +15,11 @@ export const getProfanityEngine = (
 /**
  * Checks a string for profanity based on the specified language.
  * @param input The text to check
- * @param lang The language code (defaults to 'en')
+ * @param lang The language code or 'all' (defaults to 'en')
  */
 export const profanityCheck = (
 	input: string,
-	lang: SupportedLanguage = 'en',
+	lang: LanguageOption = 'en',
 ): boolean => {
 	return getProfanityEngine(lang).check(input)
 }
@@ -28,17 +27,15 @@ export const profanityCheck = (
 /**
  * Censors profanity in a string based on the specified language.
  * @param input The text to censor
- * @param lang The language code (defaults to 'en')
+ * @param lang The language code or 'all' (defaults to 'en')
  * @param replaceChar The character to replace bad words with (defaults to '*')
  */
 export const profanityCensor = (
-    input: string,
-    lang: SupportedLanguage = 'en',
-    replaceChar = '*'
+	input: string,
+	lang: LanguageOption = 'en',
+	replaceChar = '*',
 ): string => {
-    return getProfanityEngine(lang).censor(input, replaceChar)
+	return getProfanityEngine(lang).censor(input, replaceChar)
 }
 
 export { ProfanityEngine }
-
-

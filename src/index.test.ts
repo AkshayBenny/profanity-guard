@@ -68,6 +68,11 @@ describe('Multi-Language Support & Logic', () => {
 		expect(engine.check('¡vete a la mierda, campero!')).toBe(true)
 	})
 
+	it('detects Brazilian Portuguese profanity', () => {
+		const engine = new ProfanityEngine({ dictionary: ['caralho'] })
+		expect(engine.check('vai pro c*ralho')).toBe(true)
+	})
+
 	it('detects Korean profanity', () => {
 		const engine = new ProfanityEngine({ dictionary: ['개새끼'] })
 		expect(engine.check('이 개새끼야!')).toBe(true)
@@ -148,5 +153,47 @@ describe('ProfanityEngine (Customization)', () => {
 		expect(
 			engine.check('This has standard english profanity like bullshit'),
 		).toBe(false)
+	})
+})
+
+describe("Language Option: 'all'", () => {
+	it('detects profanity from multiple dictionaries simultaneously', () => {
+		// English
+		expect(profanityCheck('This is some bullshit', 'all')).toBe(true)
+		// Spanish
+		expect(profanityCheck('vete a la mierda', 'all')).toBe(true)
+		// German
+		expect(profanityCheck('Das ist absolute scheiße', 'all')).toBe(true)
+	})
+
+	it('returns false for clean text evaluated against all dictionaries', () => {
+		expect(
+			profanityCheck('This is a completely clean sentence.', 'all'),
+		).toBe(false)
+		expect(profanityCheck('Hola, ¿cómo estás?', 'all')).toBe(false)
+		expect(profanityCheck('Bonjour mon ami', 'all')).toBe(false)
+	})
+
+	it('censors mixed-language profanity in a single string', () => {
+		// Simulating a multilingual user input
+		const mixedSentence = 'This bullshit is absolute mierda'
+
+		// 'bullshit' (8 chars) -> ********
+		// 'mierda' (6 chars) -> ******
+		expect(profanityCensor(mixedSentence, 'all')).toBe(
+			'This ******** is absolute ******',
+		)
+	})
+
+	it('initializes a custom engine with the "all" option successfully', () => {
+		// Validates that the engine constructor correctly merges all arrays
+		const globalEngine = new ProfanityEngine({ language: 'all' })
+
+		expect(globalEngine.check('bullshit')).toBe(true) // en
+		expect(globalEngine.check('блядь')).toBe(true) // ru
+		expect(globalEngine.check('개새끼')).toBe(true) // ko
+
+		// Ensures whitelisting still works globally
+		expect(globalEngine.check('Reading a classic book')).toBe(false)
 	})
 })
