@@ -1,0 +1,28 @@
+{
+	"name": "profanity-guard",
+	"version": "1.1.17",
+	"description": "A fast, multi-language, and zero-dependency profanity filter.",
+	"main": "./dist/index.js",
+	"module": "./dist/index.mjs",
+	"types": "./dist/index.d.ts",
+	"files": [
+		"dist"
+	],
+	"publishConfig": {
+		"access": "public"
+	},
+	"scripts": {
+		"build": "pnpm exec tsc"
+	},
+	"devDependencies": {
+		"typescript": "^6.0.3"
+	},
+	"keywords": [
+		"profanity",
+		"filter",
+		"moderation",
+		"typescript"
+	],
+	"author": "Akshay Benny",
+	"license": "MIT"
+}

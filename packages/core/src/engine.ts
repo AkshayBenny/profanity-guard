@@ -1,4 +1,4 @@
-import { dictionaries, LanguageOption } from './locales'
+import { dictionaries, LanguageOption } from "./locales"
 
 export interface ProfanityOptions {
 	language?: LanguageOption

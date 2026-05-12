@@ -1,7 +1,16 @@
 import { defineConfig } from 'vitest/config'
+import path from 'path'
 
 export default defineConfig({
 	test: {
-		exclude: ['node_modules', 'dist'],
+		include: ['packages/*/src/**/*.{test,spec}.ts'],
+		exclude: ['**/node_modules/**', '**/dist/**'],
+		// This is the magic part
+		alias: {
+			'profanity-guard': path.resolve(
+				__dirname,
+				'./packages/core/src/index.ts',
+			),
+		},
 	},
 })

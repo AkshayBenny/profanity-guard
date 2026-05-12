@@ -1,78 +1,11 @@
 {
-	"name": "profanity-guard",
-	"version": "1.1.15",
-	"funding": [
-		{
-			"type": "buy_me_a_coffee",
-			"url": "https://buymeacoffee.com/akshaybenny"
-		},
-		{
-			"type": "github",
-			"url": "https://github.com/sponsors/AkshayBenny"
-		}
-	],
-	"description": "A fast, multi-language, and zero-dependency profanity filter. Protect your applications with a massive dictionary of 5,000+ words across English, Arabic, German, Spanish, French, Hindi, Korean, Russian, Mandarin.",
-	"main": "./dist/index.js",
-	"types": "./dist/index.d.ts",
+	"name": "profanity-guard-monorepo",
+	"private": true,
 	"scripts": {
+		"build": "pnpm --filter \"*\" run build",
 		"test": "vitest run",
-		"test:watch": "vitest",
-		"build": "tsc",
-		"prepublishOnly": "npm run build",
-		"ship-it": "npm version patch && npm run build && npm publish"
+		"test:watch": "vitest"
 	},
-	"files": [
-		"dist"
-	],
-	"keywords": [
-		"profanity",
-		"filter",
-		"bad words",
-		"censor",
-		"moderation",
-		"multilingual",
-		"i18n",
-		"internationalization",
-		"english",
-		"french",
-		"hindi",
-		"russian",
-		"mandarin",
-		"chinese",
-		"arabic",
-		"german",
-		"spanish",
-		"korean",
-		"react",
-		"nextjs",
-		"typescript",
-		"schimpfwortfilter",
-		"deutsch",
-		"filtro de profanidad",
-		"español",
-		"비속어 필터",
-		"한국어",
-		"فلتر الشتائم",
-		"عربي",
-		"filtre anti-gros mots",
-		"français",
-		"фильтр мата",
-		"русский",
-		"敏感词过滤",
-		"中文",
-		"अपशब्द फ़िल्टर",
-		"हिंदी"
-	],
-	"author": "Akshay Benny",
-	"homepage": "https://github.com/AkshayBenny/profanity-guard#readme",
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/AkshayBenny/profanity-guard.git"
-	},
-	"bugs": {
-		"url": "https://github.com/AkshayBenny/profanity-guard/issues"
-	},
-	"license": "MIT",
 	"devDependencies": {
 		"@types/node": "^25.6.0",
 		"typescript": "^6.0.3",
