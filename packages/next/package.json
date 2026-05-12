@@ -1,0 +1,23 @@
+{
+	"name": "@profanity-guard/next",
+	"version": "1.0.0",
+	"description": "Next.js utilities and Server Action protection for profanity-guard",
+	"main": "./dist/index.js",
+	"module": "./dist/index.mjs",
+	"types": "./dist/index.d.ts",
+	"files": [
+		"dist"
+	],
+	"scripts": {
+		"build": "tsup src/index.ts --format cjs,esm --dts --clean",
+		"test": "vitest run"
+	},
+	"peerDependencies": {
+		"next": "^13.0.0 || ^14.0.0 || ^15.0.0",
+		"profanity-guard": "workspace:*"
+	},
+	"devDependencies": {
+		"next": "^15.0.0",
+		"tsup": "^8.3.5"
+	}
+}

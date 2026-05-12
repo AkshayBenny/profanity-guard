@@ -1,0 +1,16 @@
+{
+	"extends": "../../tsconfig.json",
+	"compilerOptions": {
+		"outDir": "dist",
+		"rootDir": "src",
+		"baseUrl": ".",
+		"jsx": "react-jsx",
+		"lib": ["DOM", "DOM.Iterable", "ESNext"],
+		"paths": {
+			"profanity-guard": ["../core/src/index.ts"]
+		}
+	},
+	"include": ["src"],
+	"exclude": ["dist", "node_modules"],
+	"references": [{ "path": "../core" }]
+}

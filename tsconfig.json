@@ -1,22 +1,22 @@
 {
-	"compilerOptions": {
-		"target": "ES2018",
-		"module": "CommonJS",
-		"lib": ["ES2018", "DOM"],
-		"declaration": true,
-		"rootDir": "packages/core/src",
-		"outDir": "./dist",
-		"strict": true,
-		"esModuleInterop": true,
-		"skipLibCheck": true,
-		"forceConsistentCasingInFileNames": true
-	},
-	"include": [
-		"packages/core/src/**/*",
-		"packages/core/src/locales",
-		"packages/core/src/engine.ts",
-		"packages/core/src/index.test.ts",
-		"packages/core/src/index.ts"
-	],
-	"exclude": ["node_modules", "dist"]
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "composite": true, // Required for project references
+    "declaration": true,
+    "declarationMap": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "ignoreDeprecations": "6.0"
+  },
+  "files": [],
+  "references": [
+    { "path": "packages/core" },
+    { "path": "packages/express" },
+    { "path": "packages/react" },
+    { "path": "packages/next" }
+  ]
 }

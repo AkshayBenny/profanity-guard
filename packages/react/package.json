@@ -1,0 +1,26 @@
+{
+  "name": "@profanity-guard/react",
+  "version": "1.0.0",
+  "description": "React hooks and providers for profanity-guard",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsup src/index.tsx --format cjs,esm --dts --clean --minify",
+    "test": "vitest run"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0",
+    "profanity-guard": "workspace:*"
+  },
+  "devDependencies": {
+    "@testing-library/react": "^16.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "jsdom": "^24.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tsup": "^8.3.5"
+  }
+}
