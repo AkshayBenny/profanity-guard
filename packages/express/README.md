@@ -1,5 +1,3 @@
-# @profanity-guard/express
-
 Official Express.js middleware for [profanity-guard](https://github.com/AkshayBenny/profanity-guard).
 
 ## Installation

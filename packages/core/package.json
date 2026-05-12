@@ -17,12 +17,42 @@
 	"devDependencies": {
 		"typescript": "^6.0.3"
 	},
+
+	"funding": [
+		{
+			"type": "buy_me_a_coffee",
+			"url": "https://buymeacoffee.com/akshaybenny"
+		},
+		{
+			"type": "github",
+			"url": "https://github.com/sponsors/AkshayBenny"
+		}
+	],
 	"keywords": [
 		"profanity",
 		"filter",
+		"bad words",
+		"censor",
 		"moderation",
+		"multilingual",
+		"i18n",
+		"internationalization",
+		"english",
+		"french",
+		"hindi",
+		"russian",
+		"mandarin",
+		"arabic",
+		"german",
+		"spanish",
+		"korean",
 		"typescript"
 	],
 	"author": "Akshay Benny",
-	"license": "MIT"
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/AkshayBenny/profanity-guard.git",
+		"directory": "packages/core"
+	}
 }

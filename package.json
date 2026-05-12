@@ -1,16 +1,27 @@
 {
-	"name": "profanity-guard-monorepo",
-	"private": true,
-	"scripts": {
-		"build": "pnpm --filter \"*\" run build",
-		"test": "vitest run",
-		"test:watch": "vitest",
-		"clean": "rm -rf packages/*/dist",
-		"ship-it": "pnpm run clean && pnpm run test && pnpm run build && pnpm -r publish --access public"
-	},
-	"devDependencies": {
-		"@types/node": "^25.6.0",
-		"typescript": "^6.0.3",
-		"vitest": "^4.1.5"
-	}
+    "name": "profanity-guard-monorepo",
+    "private": true,
+    "description": "Monorepo for profanity-guard core and ecosystem adapters",
+    "scripts": {
+        "build": "pnpm --filter \"*\" run build",
+        "test": "vitest run",
+        "test:watch": "vitest",
+        "clean": "rm -rf packages/*/dist",
+        "ship-it": "pnpm run clean && pnpm run test && pnpm run build && pnpm -r publish --access public"
+    },
+    "devDependencies": {
+        "@types/node": "^25.6.0",
+        "typescript": "^6.0.3",
+        "vitest": "^4.1.5"
+    },
+    "author": "Akshay Benny",
+    "license": "MIT",
+    "homepage": "https://github.com/AkshayBenny/profanity-guard#readme",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/AkshayBenny/profanity-guard.git"
+    },
+    "bugs": {
+        "url": "https://github.com/AkshayBenny/profanity-guard/issues"
+    }
 }

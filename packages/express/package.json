@@ -25,5 +25,22 @@
 		"supertest": "^7.2.2",
 		"tsup": "^8.5.1",
 		"vitest": "^4.1.6"
+	},
+	"description": "Express.js middleware for profanity-guard. Easily block or censor profanity in request bodies, queries, and parameters.",
+	"module": "./dist/index.mjs",
+	"keywords": [
+		"profanity",
+		"express",
+		"middleware",
+		"censor",
+		"filter",
+		"request-validation"
+	],
+	"author": "Akshay Benny",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/AkshayBenny/profanity-guard.git",
+		"directory": "packages/express"
 	}
 }
