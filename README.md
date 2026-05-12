@@ -13,10 +13,18 @@ A fast, multi-language, and zero-dependency profanity filter. Protect your appli
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/AkshayBenny/profanity-guard/pulls)
 [![GitHub issues](https://img.shields.io/github/issues/AkshayBenny/profanity-guard.svg)](https://github.com/AkshayBenny/profanity-guard/issues)
 
+## Installation
+
+```bash
+npm install profanity-guard
+# or
+yarn add profanity-guard
+```
+
 ## Features
 
 - **Multilingual:** Out-of-the-box detection for 5,000+ offensive terms in English (`en`), Arabic (`ar`), German (`de`), Spanish (`es`), French (`fr`), Hindi (`hi`), Korean (`ko`), Russian (`ru`), Mandarin (`zh`), Brazilian Portuguese (`br`).
-- **Performance-First:** Uses O(1) Set lookups and optimized tokenization.
+- **Performance-First:** Uses O(1) Set lookups and optimized tokenization. 10x faster than `no-profanity` and 15x faster than `bad-words`.
 - **Smart Censoring:** Automatically mask bad words while keeping surrounding punctuation and spacing perfectly intact.
 - **Leet-Speak Detection:** Automatically catches bypasses like `b!tch`, `a$$hole`, or `f*ck`.
 - **False-Positive Prevention:** Smart logic prevents false positives for words like "button" or "classic".
@@ -41,14 +49,6 @@ In a local benchmark of 10,000 validations:
 _Result: `profanity-guard` is 10x faster than `no-profanity` and 15x faster than `bad-words`, while offering superior bypass protection._
 
 > **Note on minimalist libraries:** Libraries like `leo-profanity` will benchmark faster (~10ms) because they skip Unicode normalization and leetspeak translation. `profanity-guard` intentionally trades a fraction of a millisecond to guarantee accuracy against modern filter bypasses.
-
-## Installation
-
-```bash
-npm install profanity-guard
-# or
-yarn add profanity-guard
-```
 
 ## Usage
 
