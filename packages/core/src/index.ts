@@ -1,5 +1,5 @@
 import { ProfanityEngine } from './engine'
-import { LanguageOption } from './locales'
+import type { LanguageOption, SupportedLanguage } from './locales'
 
 const engines = new Map<LanguageOption, ProfanityEngine>()
 
@@ -39,3 +39,5 @@ export const profanityCensor = (
 }
 
 export { ProfanityEngine }
+
+export type { LanguageOption, SupportedLanguage }

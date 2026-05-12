@@ -4,13 +4,19 @@
 		"module": "CommonJS",
 		"lib": ["ES2018", "DOM"],
 		"declaration": true,
-		"rootDir": "./src",
+		"rootDir": "packages/core/src",
 		"outDir": "./dist",
 		"strict": true,
 		"esModuleInterop": true,
 		"skipLibCheck": true,
 		"forceConsistentCasingInFileNames": true
 	},
-	"include": ["src/**/*"],
+	"include": [
+		"packages/core/src/**/*",
+		"packages/core/src/locales",
+		"packages/core/src/engine.ts",
+		"packages/core/src/index.test.ts",
+		"packages/core/src/index.ts"
+	],
 	"exclude": ["node_modules", "dist"]
 }
