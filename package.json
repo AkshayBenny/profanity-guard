@@ -4,7 +4,9 @@
 	"scripts": {
 		"build": "pnpm --filter \"*\" run build",
 		"test": "vitest run",
-		"test:watch": "vitest"
+		"test:watch": "vitest",
+		"clean": "rm -rf packages/*/dist",
+		"ship-it": "pnpm run clean && pnpm run test && pnpm run build && pnpm -r publish --access public"
 	},
 	"devDependencies": {
 		"@types/node": "^25.6.0",
