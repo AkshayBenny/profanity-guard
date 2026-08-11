@@ -43,6 +43,22 @@ describe('Multi-Language Support & Logic', () => {
 		expect(engine.check('прекрати это, бл**ь')).toBe(true)
 	})
 
+	it('detects common Russian inflected forms', () => {
+		const engine = new ProfanityEngine({ language: 'ru' })
+		const words = [
+			'ебучая',
+			'пиздеца',
+			'пиздецкий',
+			'схуяли',
+			'хуйнуть',
+			'хуйню',
+		]
+
+		for (const word of words) {
+			expect(engine.check(word)).toBe(true)
+		}
+	})
+
 	it('detects Hindi/Hinglish profanity', () => {
 		const engine = new ProfanityEngine({ dictionary: ['bhand'] })
 		expect(engine.check('Stop being a b**nd')).toBe(true)
